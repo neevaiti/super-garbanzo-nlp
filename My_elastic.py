@@ -1,11 +1,8 @@
+import csv
 from faker import Faker
-from datetime import datetime
 from elasticsearch import Elasticsearch
 
-# Initialiser la librairie Faker
 fake = Faker()
-
-# Se connecter à Elasticsearch
 es = Elasticsearch(["localhost:9200"])
 
 # Générer et indexer des documents dans l'index "notes"
@@ -20,3 +17,17 @@ for _ in range(100):
         "confidence": None  # Champ à remplir avec le modèle
     }
     es.index(index="notes", body=document)
+
+# Exemple pour générer une nouvelle donnée factice
+new_text = fake.text()
+
+# Appliquez le modèle TF-IDF sur la nouvelle donnée
+new_text_vectorized = vectorizer.transform([new_text])
+
+# Prédisez l'émotion et la confiance pour la nouvelle donnée
+emotion_prediction = emotion_model.predict(new_text_vectorized)
+confidence_prediction = confidence_model.predict(new_text_vectorized)
+
+# Affichez les résultats
+print("Emotion prediction:", emotion_prediction)
+print("Confidence prediction:", confidence_prediction)
