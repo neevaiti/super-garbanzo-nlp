@@ -1,0 +1,10 @@
+django
+python-dotenv
+elasticsearch
+django-elasticsearch-dsl
+psycopg2-binary
+nltk
+pandas
+seaborn
+matplotlib
+numpy
