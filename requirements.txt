@@ -3,6 +3,7 @@ python-dotenv
 elasticsearch
 django-elasticsearch-dsl
 psycopg2-binary
+requests
 nltk
 pandas
 seaborn
