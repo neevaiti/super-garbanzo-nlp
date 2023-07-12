@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>New text</title>
+{% endblock  %}
+
+{% block body %}
+    <form method="POST" action="{% url 'new_text' %}">
+        {% csrf_token %}
+        <textarea name="text"></textarea>
+        <input type="submit" value="Soumettre">
+    </form>
+
+{% endblock %}

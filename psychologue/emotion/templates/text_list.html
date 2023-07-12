@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Text list</title>
+{% endblock  %}
+
+{% block body %}
+    {% if patient %}
+    <p> Feelings texts for : {{patient.first_name}} {{patient.last_name}}</p>
+    
+    <ul>
+    {% for text in all_texts %}
+        <li><p>{{ text.content }}, {{text.emotion}}</p></li>
+    {% empty %}
+        <p>Aucun texte n'est disponible.</p>
+    {% endfor %}
+    {% endif %}
+    {% if not patient %}
+    <p> Patient not found </p>
+    {% endif %}
+    </ul>
+
+{% endblock %}
+
