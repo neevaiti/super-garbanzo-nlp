@@ -1,17 +1,21 @@
 from elasticsearch import Elasticsearch
 from faker import Faker
+from hugging_request import query
 import csv
 import random
 import pickle
-from preprocessing import TextPreprocessor
 
 
 
+def hugging_predict(text):
+    output = query({
+        "inputs": text,
+    })
+    if type(output) == list:
+        return output[0][0]["label"].capitalize()
+    
+    return []
 
-# Load the pickle file
-pickle_path = "/Users/maximer/Documents/Dev/Python/Projets/elasticsearch-nlp-sentiment_analysis/analyse/nlp_pipeline.pkl"
-with open(pickle_path, 'rb') as file:
-    model = pickle.load(file)
 
 # Connexion à Elasticsearch
 es = Elasticsearch([{'host': 'localhost', 'port': 9200,'scheme': 'http'}])
@@ -40,7 +44,7 @@ fake = Faker()
 
 
 # Chemin vers le fichier CSV
-csv_file = 'elasticsearch-nlp-sentiment_analysis/Emotion_final.csv'
+csv_file = '../src/emotion_final.csv'
 
 from random import randint
 
@@ -50,8 +54,7 @@ with open(csv_file, 'r') as file:
     for row in reader:
         # Génération des valeurs Faker pour les champs nom et prenom
         row['patient_id'] = randint(3,60)
-        row['emotion'] = model.predict([row['text']])[0]
-        row['confidence'] = model.predict_proba([row['text']]).max()
+        row['emotion'] = hugging_predict([row['text']])
         row['date'] =  fake.date_between(start_date='-30d', end_date='today').strftime("%Y-%m-%d")
         # Indexation des données dans Elasticsearch
         es.index(index=index_name, document=row)
