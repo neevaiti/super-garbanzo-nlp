@@ -24,7 +24,7 @@ services:
 
   web:
     build: .
-    command: bash -c "python psychologue/manage.py makemigrations && python psychologue/manage.py migrate && python psychologue/manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python psychologue/manage.py makemigrations && python psychologue/manage.py migrate && python psychologue/manage.py runserver 0.0.0.0:8000 && bash bash_commands/hugging_request.sh"
     volumes:
       - .:/code
     ports:
@@ -32,17 +32,7 @@ services:
     depends_on:
       - db
       - elasticsearch
-
-  script:
-    build : .
-    command: bash -c "bash bash_commands/hugging_request.sh"
-    volumes:
-      - .:/code
-    depends_on:
-      - db 
-      - web
-      - elasticsearch
-
+      
 volumes:
   postgres_data:
   elasticsearch_data:
