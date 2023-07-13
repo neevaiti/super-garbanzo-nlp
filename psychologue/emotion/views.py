@@ -22,9 +22,7 @@ def new_text(request):
     else:
         if request.method == 'POST':
             text = request.POST.get('text', '')
-            output = query({
-                "inputs": text,
-            })
+            output = query(text)
             emotion = output[0][0]["label"].capitalize()
             new_text = Text(content=text, 
                             emotion = emotion,
@@ -34,21 +32,6 @@ def new_text(request):
         return render(request, 'add_text.html')
 
 def text_by_id(request, id):
-    # text=None
-    # all_texts = Text.objects.filter(patient_id = id)
-    # text = request.POST.get('text', '')
-    # output = query({
-    #     "inputs": text,
-    # })
-    # if not type(output) == dict:
-    #     emotion = output[0][0]["label"].capitalize()
-    #     new_text = Text(content=text, 
-    #                     emotion = emotion,
-    #                     patient_id = id)
-    #     new_text.save()
-
-    #     return render(request, 'index.html', {"all_texts" : all_texts, "emotion" : emotion, "output": type(output)})
-    
     es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
     
     query = {
