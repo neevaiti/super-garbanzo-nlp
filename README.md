@@ -25,7 +25,7 @@ This tool has been designed with a particular focus on efficiency and ease of us
 
 ## Requirements
 
-You can install the necessary packages via the requirements.txt file.
+You can install the necessary packages via the requirements.txt file for use notebooks locally.
 
 ```sh
 pip install -r requirements.txt
