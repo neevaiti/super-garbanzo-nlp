@@ -27,7 +27,7 @@ def new_text(request):
             emotion = output[0][0]["label"].capitalize()
             new_text = Text(content=text, 
                             emotion = emotion,
-                            patient_id = request.user.id)
+                            patient_id = request.user)
             new_text.save()
             return render(request, 'add_text.html', {"emotion" : emotion})
     return render(request, 'add_text.html')
