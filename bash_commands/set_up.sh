@@ -7,7 +7,7 @@ docker run -d --name elastic \
     docker.elastic.co/elasticsearch/elasticsearch:7.17.10
 
 
-curl -X DELETE "http://localhost:9200/textes"
+curl -X DELETE "http://localhost:9200/notes"
 
 curl -X PUT "localhost:9200/textes" -H 'Content-Type: application/json' -d'
 {

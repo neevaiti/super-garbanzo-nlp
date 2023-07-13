@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
-from django.contrib.auth.models import User
+from django.shortcuts import render, redirect, HttpResponseRedirect
+from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import  Text
@@ -9,36 +9,29 @@ from io import BytesIO
 from elasticsearch import Elasticsearch
 import matplotlib as plt, base64
 
-
+index_name = "notes"
 
 def homepage(request):
     return render(request, "index.html")
 
 
-@login_required
+
 def new_text(request):
-    text = None
-    if request.method == 'POST':
-        text = request.POST.get('text', '')
-        output = query({
-            "inputs": text,
-        })
-        emotion = output[0][0]["label"].capitalize()
-        new_text = Text(content=text, 
-                        emotion = emotion,
-                        patient_id = request.user)
-        new_text.save()
+    if not request.user.is_authenticated: #if the user is not authenticated
+        return HttpResponseRedirect(reverse("login")) #redirect to login page
+    else:
+        if request.method == 'POST':
+            text = request.POST.get('text', '')
+            output = query({
+                "inputs": text,
+            })
+            emotion = output[0][0]["label"].capitalize()
+            new_text = Text(content=text, 
+                            emotion = emotion,
+                            patient_id = request.user)
+            new_text.save()
+            return render(request, 'add_text.html')
         return render(request, 'add_text.html')
-    return render(request, 'add_text.html')
-
-
-        # if type(output) == list:
-        #     emotion = output[0][0]["label"].capitalize()
-        #     new_text = Text(content=text, 
-        #                     emotion = emotion,
-        #                     patient_id = request.user)
-        #     new_text.save()
-        #     return render(request, 'add_text.html', {"emotion" : emotion})
 
 def text_by_id(request, id):
     # text=None
@@ -65,13 +58,13 @@ def text_by_id(request, id):
         'size': 1000
     }
     
-    response = es.search(index='textes', body=query)
+    response = es.search(index=index_name, body=query)
     if 'hits' in response:
         hits = response['hits']['hits']
         texts = [hit['_source'] for hit in hits]
         return texts
     
-    return render(request, 'text_list.html')
+    return render(request, 'text_list.html', {"texts" : texts})
 
 
 

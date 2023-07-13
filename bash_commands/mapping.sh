@@ -1,9 +1,7 @@
 #!/bin/sh
 curl -X DELETE "http://localhost:9200/notes"
 
-curl -X DELETE "http://localhost:9200/textes"
-
-curl -X PUT "localhost:9200/textes" -H 'Content-Type: application/json' -d'
+curl -X PUT "localhost:9200/notes" -H 'Content-Type: application/json' -d'
 {
     "settings": {
         "index": {
