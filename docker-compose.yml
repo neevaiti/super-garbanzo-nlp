@@ -1,53 +1,38 @@
+version: '3'
+
 services:
+
+  db:
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
   elasticsearch:
-    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.13.4'
-    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.10
     environment:
-      - xpack.security.enabled=false
-      - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
+      - "discovery.type=single-node"
     ports:
-      - '9200:9200'
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
 
-  kibana:
-    image: 'docker.elastic.co/kibana/kibana:7.13.4'
+  web:
+    build: .
+    command: bash -c "python psychologue/manage.py makemigrations && python psychologue/manage.py migrate && python psychologue/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
     depends_on:
+      - db
       - elasticsearch
-    ports:
-      - '5601:5601'
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
 
-  database:
-    build:
-      context: .
-      dockerfile: PostgresDockerfile
-    container_name: database
-    ports:
-      - '5432:5432'
-    environment:
-      - POSTGRES_PASSWORD=postgres
-
-  redis:
-    image: 'redis:alpine'
-    container_name: redis
-    ports:
-      - '6379:6379'
-
-  pgsync:
-    build:
-      context: .
-      dockerfile: PgsyncDockerfile
-    container_name: pgsync
-    environment:
-      - PG_USER=postgres
-      - PG_PASSWORD=postgres
-      - PG_DATABASE=postgres
-      - PG_HOST=database
-      - ELASTICSEARCH_HOST=elasticsearch
-      - REDIS_HOST=redis
+volumes:
+  postgres_data:
+  elasticsearch_data:

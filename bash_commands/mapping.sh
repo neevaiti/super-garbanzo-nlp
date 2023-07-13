@@ -1,3 +1,5 @@
+#!/bin/sh
+curl -X DELETE "http://localhost:9200/notes"
 
 curl -X DELETE "http://localhost:9200/textes"
 
