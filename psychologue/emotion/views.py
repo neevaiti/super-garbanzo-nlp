@@ -23,16 +23,22 @@ def new_text(request):
         output = query({
             "inputs": text,
         })
-        if type(output) == list:
-            emotion = output[0][0]["label"].capitalize()
-            new_text = Text(content=text, 
-                            emotion = emotion,
-                            patient_id = request.user.id)
-            new_text.save()
-            return render(request, 'add_text.html', {"emotion" : emotion})
+        emotion = output[0][0]["label"].capitalize()
+        new_text = Text(content=text, 
+                        emotion = emotion,
+                        patient_id = request.user)
+        new_text.save()
+        return render(request, 'add_text.html')
     return render(request, 'add_text.html')
 
 
+        # if type(output) == list:
+        #     emotion = output[0][0]["label"].capitalize()
+        #     new_text = Text(content=text, 
+        #                     emotion = emotion,
+        #                     patient_id = request.user)
+        #     new_text.save()
+        #     return render(request, 'add_text.html', {"emotion" : emotion})
 
 def text_by_id(request, id):
     # text=None
