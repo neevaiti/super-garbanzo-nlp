@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import  Text
 from .forms import RegisterUserForm
 from .hugging_request import query
-
+from io import BytesIO
 from elasticsearch import Elasticsearch
 import matplotlib as plt, base64
 

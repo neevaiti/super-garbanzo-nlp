@@ -1,10 +1,8 @@
 from elasticsearch import Elasticsearch
 from faker import Faker
 from hugging_request import query
+from random import randint
 import csv
-import random
-import pickle
-
 
 
 def hugging_predict(text):
@@ -46,7 +44,6 @@ fake = Faker()
 # Chemin vers le fichier CSV
 csv_file = '../src/emotion_final.csv'
 
-from random import randint
 
 # Lecture du fichier CSV et indexation des données
 with open(csv_file, 'r') as file:
